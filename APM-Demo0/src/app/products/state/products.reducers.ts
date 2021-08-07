@@ -24,6 +24,16 @@ export const getToggleState = createSelector(
   state => state.showProductCode
 )
 
+export const getProducts = createSelector(
+  getProductFeatureState,
+  state => state.products
+)
+
+export const getCurrentProduct = createSelector(
+  getProductFeatureState,
+  state => state.currentProduct
+)
+
 export const productReducer = createReducer<ProductState>(
   initialState,
   on(createAction('[Product] Toggle Product Code'), (state): ProductState => {
