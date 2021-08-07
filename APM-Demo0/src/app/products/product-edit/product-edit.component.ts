@@ -9,6 +9,7 @@ import { GenericValidator } from '../../shared/generic-validator';
 import { NumberValidators } from '../../shared/number.validator';
 import { Store } from '@ngrx/store';
 import { State, getCurrentProduct } from '../state/products.reducers';
+import * as ProductActions from '../state/product.actions';
 
 @Component({
   selector: 'pm-product-edit',
@@ -81,6 +82,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     // Set the local product property
     this.store.select(getCurrentProduct).subscribe(
       product => {
+        console.log(product)
         if (product) {
           this.product = product;
           // Reset the form back to pristine
@@ -101,6 +103,10 @@ export class ProductEditComponent implements OnInit, OnDestroy {
             description: product.description
           });
         }
+        else {
+          this.product = null;
+        }
+
       }
     )
 
@@ -117,7 +123,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     if (product && product.id) {
       if (confirm(`Really delete the product: ${product.productName}?`)) {
         this.productService.deleteProduct(product.id).subscribe({
-          next: () => this.productService.changeSelectedProduct(null),
+          next: () =>  this.store.dispatch(ProductActions.clearCurrentProduct()),
           error: err => this.errorMessage = err
         });
       }

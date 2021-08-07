@@ -42,9 +42,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
     });
 
     this.store.select(getCurrentProduct).subscribe((product) => {
-      console.log(product)
-      this.selectedProduct = product;
-      console.log(this.selectedProduct);
+     this.selectedProduct = product;
     });
 
     this.store.select(getToggleState).subscribe((show: boolean) => {
