@@ -1,3 +1,4 @@
+import { State, ProductState } from './../state/products.reducers';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 
@@ -25,7 +26,7 @@ export class ProductListComponent implements OnInit, OnDestroy {
 
   constructor(
     private productService: ProductService,
-    private store: Store<any>
+    private store: Store<State>
   ) {}
 
   ngOnInit(): void {
@@ -38,9 +39,9 @@ export class ProductListComponent implements OnInit, OnDestroy {
       error: (err) => (this.errorMessage = err),
     });
 
-    this.store
-      .select('products')
-      .subscribe((data) => (this.displayCode = data.showProductCode));
+    this.store.select('products').subscribe((products: ProductState) => {
+      this.displayCode = products.showProductCode;
+    });
   }
 
   ngOnDestroy(): void {
