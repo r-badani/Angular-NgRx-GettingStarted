@@ -7,6 +7,8 @@ import { Product } from '../product';
 import { ProductService } from '../product.service';
 import { GenericValidator } from '../../shared/generic-validator';
 import { NumberValidators } from '../../shared/number.validator';
+import { Store } from '@ngrx/store';
+import { State, getCurrentProduct } from '../state/products.reducers';
 
 @Component({
   selector: 'pm-product-edit',
@@ -25,7 +27,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   private validationMessages: { [key: string]: { [key: string]: string } };
   private genericValidator: GenericValidator;
 
-  constructor(private fb: FormBuilder, private productService: ProductService) {
+  constructor(private store: Store<State>,private fb: FormBuilder, private productService: ProductService) {
 
     // Defines all of the validation messages for the form.
     // These could instead be retrieved from a file or database.
@@ -80,27 +82,32 @@ export class ProductEditComponent implements OnInit, OnDestroy {
 
   displayProduct(product: Product | null): void {
     // Set the local product property
-    this.product = product;
+    this.store.select(getCurrentProduct).subscribe(
+      product => {
+        if (product) {
+          this.product = product;
+          // Reset the form back to pristine
+          this.productForm.reset();
 
-    if (product) {
-      // Reset the form back to pristine
-      this.productForm.reset();
+          // Display the appropriate page title
+          if (product.id === 0) {
+            this.pageTitle = 'Add Product';
+          } else {
+            this.pageTitle = `Edit Product: ${product.productName}`;
+          }
 
-      // Display the appropriate page title
-      if (product.id === 0) {
-        this.pageTitle = 'Add Product';
-      } else {
-        this.pageTitle = `Edit Product: ${product.productName}`;
+          // Update the data on the form
+          this.productForm.patchValue({
+            productName: product.productName,
+            productCode: product.productCode,
+            starRating: product.starRating,
+            description: product.description
+          });
+        }
       }
+    )
 
-      // Update the data on the form
-      this.productForm.patchValue({
-        productName: product.productName,
-        productCode: product.productCode,
-        starRating: product.starRating,
-        description: product.description
-      });
-    }
+
   }
 
   cancelEdit(product: Product): void {
