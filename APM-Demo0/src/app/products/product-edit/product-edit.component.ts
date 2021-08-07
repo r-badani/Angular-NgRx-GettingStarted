@@ -59,10 +59,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
       description: ''
     });
 
-    // Watch for changes to the currently selected product
-    this.sub = this.productService.selectedProductChanges$.subscribe(
-      currentProduct => this.displayProduct(currentProduct)
-    );
+  this.displayProduct()
 
     // Watch for value changes for validation
     this.productForm.valueChanges.subscribe(
@@ -80,7 +77,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
     this.displayMessage = this.genericValidator.processMessages(this.productForm);
   }
 
-  displayProduct(product: Product | null): void {
+  displayProduct(): void {
     // Set the local product property
     this.store.select(getCurrentProduct).subscribe(
       product => {
@@ -113,7 +110,7 @@ export class ProductEditComponent implements OnInit, OnDestroy {
   cancelEdit(product: Product): void {
     // Redisplay the currently selected product
     // replacing any edits made
-    this.displayProduct(product);
+    this.displayProduct();
   }
 
   deleteProduct(product: Product): void {
