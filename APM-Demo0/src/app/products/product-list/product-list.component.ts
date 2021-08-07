@@ -1,4 +1,8 @@
-import { State, ProductState } from './../state/products.reducers';
+import {
+  State,
+  ProductState,
+  getToggleState,
+} from './../state/products.reducers';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 
@@ -39,8 +43,8 @@ export class ProductListComponent implements OnInit, OnDestroy {
       error: (err) => (this.errorMessage = err),
     });
 
-    this.store.select('products').subscribe((products: ProductState) => {
-      this.displayCode = products.showProductCode;
+    this.store.select(getToggleState).subscribe((show: boolean) => {
+      this.displayCode = show;
     });
   }
 
